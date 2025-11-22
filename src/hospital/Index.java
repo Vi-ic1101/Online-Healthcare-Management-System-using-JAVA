@@ -60,13 +60,19 @@ public class Index extends JFrame implements ActionListener {
         l1.add(b2);
 
         b3 = new JButton("Admin");
-        b3.setBounds(150,400,150,40);
+        b3.setBounds(b1.getX(),b1.getY()+50,150,40);
         b3.setBackground(Color.darkGray);
         b3.setForeground(Color.orange);
         b3.addActionListener(this);
 
         l1.add(b3);
 
+        b4 = new JButton("Register");
+        b4.setBounds(b2.getX(), b3.getY(), 150,40);
+        b4.setBackground(Color.darkGray);
+        b4.setForeground(Color.orange);
+        b4.addActionListener(this);
+        l1.add(b4);
         f.setSize(800,570);
         f.setLocation(300,100);
         f.setVisible(true);
@@ -77,24 +83,28 @@ public class Index extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==b1){
-            f.setVisible(false);
+            f.dispose();
             new LoginPage();
 
         }
         if(e.getSource()==b2){
 
-            f.setVisible(false);
+            f.dispose();
             new PatientLogin();
 
         }
         if(e.getSource()==b3){
-            f.setVisible(false);
+            f.dispose();
             new AdminLogin();
+        }
+        if(e.getSource()==b4){
+            f.dispose();
+            new RegistrationPage();
         }
     }
 
     public static void main(String[] args) {
-        
+
         new Index();
     }
 }

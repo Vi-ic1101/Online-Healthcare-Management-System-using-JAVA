@@ -104,7 +104,8 @@ public class LoginPage extends JFrame implements ActionListener {
                 ConnectionClass obj=new ConnectionClass();
                 String name= user1.getText();
                 String password=password1.getText();
-                String qB="select * from admin where username='"+name+"' and password='"+password;
+                int id=Integer.parseInt(iD.getText());
+                String qB="select * from hospital_management_system.admin where adminId="+id +" and password='"+password+"' ;";
 
                 ResultSet rs = obj.stm.executeQuery(qB);
 

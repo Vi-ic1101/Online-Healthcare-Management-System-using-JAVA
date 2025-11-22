@@ -95,7 +95,7 @@ public class PatientLogin extends JFrame implements ActionListener {
                 ConnectionClass obj=new ConnectionClass();
                 String name= user1.getText();
                 String password=password1.getText();
-                String qB="select * from admin where username='"+name+"' and password='"+password;
+                String qB="select * from admin where username='"+name+"' and password='"+password+"' ;";
 
                 ResultSet rs = obj.stm.executeQuery(qB);
 
