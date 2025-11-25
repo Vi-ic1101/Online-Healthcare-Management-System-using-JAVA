@@ -130,10 +130,10 @@ Create tables for Patients, Doctors, Admins, and Appointments.
 Configure JDBC connection
 
   **present inside connection class**
-  Update the database URL, username, and password in the Java code: 
-  String url = "jdbc:mysql://localhost:3306/hms_database";
-  String username = "root";
-  String password = "12345";
+  - Update the database URL, username, and password in the Java code: <BR>
+  - String url = "jdbc:mysql://localhost:3306/hms_database";<BR>
+  - String username = "root";<BR>
+  -String password = "12345";<BR>
 
 
 ## Run the project
@@ -150,16 +150,16 @@ You can now register patients, add doctors, schedule appointments, and access al
 
 ## Key Highlights
 
-✅ Real-time updates across all modules
-✅ Intelligent appointment conflict checks
-✅ Expandable console or GUI (Swing/JavaFX)
-✅ Easy for both technical and non-technical staff
-✅ Secure role-based access control
-✅ Comprehensive data validation
-✅ Relational database integrity with foreign keys
+✅ Real-time updates across all modules<BR>
+✅ Intelligent appointment conflict checks<BR>
+✅ Expandable console or GUI (Swing/JavaFX)<BR>
+✅ Easy for both technical and non-technical staff<BR>
+✅ Secure role-based access control<BR>
+✅ Comprehensive data validation<BR>
+✅ Relational database integrity with foreign keys<BR>
 
 ## **Tables in the System**
-  1=> admin
-  2=> appointment
-  3=> doctor
-  4=> patient
+  1=> admin<BR>
+  2=> appointment<BR>
+  3=> doctor<BR>
+  4=> patient<BR>
