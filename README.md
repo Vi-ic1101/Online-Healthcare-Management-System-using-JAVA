@@ -13,7 +13,7 @@ Hospitals handle thousands of records daily—patients, doctors, schedules. Manu
 - ❌ Difficulty in updating or retrieving information  
 
 **HMS provides a centralized solution that ensures:**  
-- ✅ Faster operations  
+- ✅ Faster operations <BR>  
 - ✅ Better accuracy  
 - ✅ Improved patient care  
 - ✅ Reduced paperwork  
