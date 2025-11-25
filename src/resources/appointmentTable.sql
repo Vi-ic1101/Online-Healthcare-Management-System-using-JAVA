@@ -1,19 +1,11 @@
-use hospital_management_system;
--- create table hospital_management_system.appointment (
--- 	doctorId int auto_increment primary key,
---     doctorName varchar(30),
---     doctorDepartment varchar(20),
---     docAppointmentDate date,
---     docAppointpentTime time,
---     docAppointpentStatus varchar(20)
-		
-        alter table appointment
-			add patientName varchar(30) after doctorDepartment,
---     doctorName varchar(30),
--- 	doctorDepartment varchar(20),
--- 	patientAppointmentDate date,
---     patientAppointpentTime time,
---     patientAppointpentStatus varchar(20)
+-- CREATE TABLE appointment (
+--     appointmentId INT AUTO_INCREMENT PRIMARY KEY,
+--     doctorId INT NOT NULL,
+--     patientId INT NOT NULL,
+--     docAppointmentDate DATE NOT NULL,
+--     docAppointmentTime TIME NOT NULL,
+--     docAppointmentStatus VARCHAR(20) DEFAULT 'Pending',
+--     FOREIGN KEY (doctorId) REFERENCES doctor(doctorId) ON DELETE CASCADE,
+--     FOREIGN KEY (patientId) REFERENCES patient(patientId) ON DELETE CASCADE
 -- );
-
-select * from hospital_management_system.appointment;  
+select * from appointment;

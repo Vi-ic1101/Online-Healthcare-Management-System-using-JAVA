@@ -4,17 +4,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.*;
 import java.sql.ResultSet;
 
-public class LoginPage extends JFrame implements ActionListener {
+public class DoctorLogin extends JFrame implements ActionListener {
     JFrame f;
 //    JPanel panel,blurPanel;// for later use
     JLabel l1,l2,l3,l4,l5;
     JTextField user1,iD;
     JPasswordField password1;
     JButton login,back;
-    LoginPage(){
+    DoctorLogin(){
         f = new JFrame("Doctor Login Page");
         f.setBackground(Color.WHITE);
         f.setLayout(null);
@@ -42,7 +41,7 @@ public class LoginPage extends JFrame implements ActionListener {
         l2.setForeground(Color.black);
         l1.add(l2);
 
-        l5=new JLabel("Doctor id: ");
+        l5=new JLabel("Email id: ");
         l5.setBounds((f.getWidth()/2)-200,(f.getHeight()/2)-100,500,50);
         l5.setFont(new Font("Airal",Font.BOLD,30));
         l5.setForeground(Color.black);
@@ -95,31 +94,46 @@ public class LoginPage extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        if(ae.getSource()==back){
+        if (ae.getSource() == back) {
             f.setVisible(false);
             new Index();
+            return;
         }
-        try {
-            if(ae.getSource()==login){
-                ConnectionClass obj=new ConnectionClass();
-                String name= user1.getText();
-                String password=password1.getText();
-                int id=Integer.parseInt(iD.getText());
-                String qB="select * from hospital_management_system.admin where adminId="+id +" and password='"+password+"' ;";
+
+        if (ae.getSource() == login) {
+            try {
+                ConnectionClass obj = new ConnectionClass();
+
+                String name = user1.getText();
+                String password = password1.getText();
+//                int id = Integer.parseInt(iD.getText());
+                String mailId= iD.getText();
+                String qB = "SELECT * FROM hospital_management_system.doctor " +
+                        "WHERE emailId='" + mailId + "'" +
+                        " AND doctorName='" + name + "'" +
+                        " AND doctorPassword='" + password + "'";
+
 
                 ResultSet rs = obj.stm.executeQuery(qB);
 
-                if(rs.next()){
-                    new AdminLogin();
+                if (rs.next()) {
+                    // Login success
+                    new ProfileDoctor(mailId);
                     f.setVisible(false);
-                }else{
-                    JOptionPane.showMessageDialog(null,"you have entered wrong username or password");
-                    f.setVisible(false);
-                    f.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null,
+                            "Wrong ID, Username, or Password",
+                            "Login Failed",
+                            JOptionPane.ERROR_MESSAGE);
                 }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        }catch (Exception e ){
-            e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        new  DoctorLogin();
     }
 }

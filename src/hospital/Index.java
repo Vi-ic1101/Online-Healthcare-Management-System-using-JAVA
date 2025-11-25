@@ -38,6 +38,12 @@ public class Index extends JFrame implements ActionListener {
         l1.add(l2);
         f.add(l1);
 
+        l4=new JLabel("Administrator access page");
+        l4.setBounds(20,50,700,50);
+        l4.setFont(new Font("Aerial",Font.BOLD,25));
+        l4.setForeground(Color.WHITE);
+        l1.add(l4);
+
         l3=new JLabel("Project using JAVA");
         l3.setBounds(70,250,700,50);
         l3.setFont(new Font("Aerial",Font.BOLD,25));
@@ -84,7 +90,7 @@ public class Index extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==b1){
             f.dispose();
-            new LoginPage();
+            new DoctorLogin();
 
         }
         if(e.getSource()==b2){
