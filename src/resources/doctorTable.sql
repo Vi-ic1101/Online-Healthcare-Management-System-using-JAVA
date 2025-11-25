@@ -1,3 +1,4 @@
+--
 CREATE TABLE doctor (
     doctorId INT AUTO_INCREMENT PRIMARY KEY,
     doctorName VARCHAR(100) NOT NULL,

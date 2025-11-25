@@ -1,5 +1,5 @@
 
-
+--
  DESCRIBE hospital_management_system.admin;
 -- -- 
 alter table hospital_management_system.admin

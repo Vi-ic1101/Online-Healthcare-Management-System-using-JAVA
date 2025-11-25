@@ -1,3 +1,4 @@
+--
 CREATE TABLE appointment (
     appointmentId INT AUTO_INCREMENT PRIMARY KEY,
     doctorId INT NOT NULL,

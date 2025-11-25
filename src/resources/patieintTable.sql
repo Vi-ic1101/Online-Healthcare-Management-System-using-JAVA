@@ -1,4 +1,4 @@
-
+--
 CREATE TABLE patient (
     patientId INT AUTO_INCREMENT PRIMARY KEY,
     patientName VARCHAR(100) NOT NULL,
