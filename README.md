@@ -92,6 +92,11 @@ Hospitals handle thousands of records daily—patients, doctors, schedules. Manu
 ---
 
 ## Database Design
+### **Tables in the System**
+  1=> admin<BR>
+  2=> appointment<BR>
+  3=> doctor<BR>
+  4=> patient<BR>
 
 ### Appointment Table
 | Field                 | Type        | Null | Key | Default  | Extra           |
@@ -185,8 +190,15 @@ You can now register patients, add doctors, schedule appointments, and access al
 ✅ Comprehensive data validation<BR>
 ✅ Relational database integrity with foreign keys<BR>
 
-## **Tables in the System**
-  1=> admin<BR>
-  2=> appointment<BR>
-  3=> doctor<BR>
-  4=> patient<BR>
+
+
+## 👥 Project Team
+
+Meet the dedicated individuals behind this project:
+
+| Name           | Role   | github link             |
+|----------------|--------|-------------------------|
+| Vidhu Kaushik  | Leader | https://github.com/Vi-ic1101 |
+| Abhinav Singh  | Member |https://github.com/abhi2004-design |
+| Jigyasha       | Member | https://github.com/jigyasha545 |
+
