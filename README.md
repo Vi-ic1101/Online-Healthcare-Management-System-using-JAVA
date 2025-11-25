@@ -23,7 +23,45 @@ Hospitals handle thousands of records daily—patients, doctors, schedules. Manu
 - ✅ Secured critical hospital data in one place  
 
 ---
+## Setup & Usage
 
+### Steps to Run the Project
+
+1. **Create the MySQL database**  
+   - Open MySQL Workbench or your preferred MySQL client.  
+   - Create a new database for the Hospital Management System.
+
+2. **Import the provided SQL schema file**  
+   - Use the `Import` option in MySQL Workbench or run via terminal:  
+  <!-- ```sql
+   source path/to/schema.sql;```-->
+
+3. Go to Index.java
+   - main class
+   - on running it will open admin interface.
+   - admin can login as doctor, patient and admin itself.
+   - can register new doctor, patient and admin.
+---
+
+## Class Information
+  1. AdminLogin.java => admin login page
+  2. Appointment.java => appointment page for doctors
+  3. AppointmentBooking.java=> page to book appointments
+  4. ConnectionClass.java=> database connection file
+  5. DoctorLogin.java => Doctor Login page
+  6. Index.java  => main class
+  7. PatientLogin.java => Patient Login page
+  8. ProfileAdmin.java => Admin profile page
+  9. ProfileDoctor.java => Doctor profile page
+  10. ProfilePatient.java=> Patient profile page
+  11. RegistrationPage.java=> to register new user
+
+---
+      
+## Database Driver 
+   
+- mysql-connector-j-9.5.0.jar
+---
 ## Core Features
 
 ### Patient Management
@@ -38,7 +76,7 @@ Hospitals handle thousands of records daily—patients, doctors, schedules. Manu
 
 ### Appointment Scheduling
 - Book/update/cancel appointments  
-- View doctor-wise appointment lists  
+- View doctor appointment lists  
 - Real-time conflict checks  
 
 ### Role-Based Access
@@ -48,7 +86,7 @@ Hospitals handle thousands of records daily—patients, doctors, schedules. Manu
 
 ### Security
 - Secure login system  
-- Encrypted passwords  
+- passwords passwords 
 - Safe database interactions via **JDBC**
 
 ---
@@ -80,24 +118,24 @@ Hospitals handle thousands of records daily—patients, doctors, schedules. Manu
 | Field                   | Type        | Null | Key | Extra           |
 |------------------------|------------|------|-----|----------------|
 | doctorId               | int        | NO   | PRI | auto_increment |
-| doctorName             | varchar(100)| NO  |     |                |
+| doctorName             | varchar(255)| NO  |     |                |
 | address                | varchar(255)| YES |     |                |
-| doctorDepartment       | varchar(100)| NO  |     |                |
-| phone                  | varchar(20)| YES  |     |                |
-| emailId                | varchar(100)| NO  | UNI |                |
-| doctorPassword         | varchar(50)| YES  |     |                |
-| doctorConfirmPassword  | varchar(50)| YES  |     |                |
+| doctorDepartment       | varchar(255)| NO  |     |                |
+| phone                  | varchar(255)| YES  |     |                |
+| emailId                | varchar(255)| NO  | UNI |                |
+| doctorPassword         | varchar(255)| YES  |     |                |
+| doctorConfirmPassword  | varchar(255)| YES  |     |                |
 
 ### Admin Table
 | Field                   | Type        | Null | Key | Extra           |
 |------------------------|------------|------|-----|----------------|
 | adminId                | int        | NO   | PRI | auto_increment |
-| adminName              | varchar(50)| YES  |     |                |
-| address                | varchar(10)| YES  |     |                |
-| phone                  | varchar(15)| YES  |     |                |
-| emailID                | varchar(30)| YES  |     |                |
-| adminPassword          | varchar(20)| YES  |     |                |
-| adminConfirmPassword   | varchar(20)| YES  |     |                |
+| adminName              | varchar(255)| YES  |     |                |
+| address                | varchar(255)| YES  |     |                |
+| phone                  | varchar(255)| YES  |     |                |
+| emailID                | varchar(255)| YES  |     |                |
+| adminPassword          | varchar(255)| YES  |     |                |
+| adminConfirmPassword   | varchar(255)| YES  |     |                |
 
 ---
 
@@ -109,18 +147,7 @@ Hospitals handle thousands of records daily—patients, doctors, schedules. Manu
 
 ---
 
-## Setup & Usage
 
-### Steps to Run the Project
-
-1. **Create the MySQL database**  
-   - Open MySQL Workbench or your preferred MySQL client.  
-   - Create a new database for the Hospital Management System.
-
-2. **Import the provided SQL schema file**  
-   - Use the `Import` option in MySQL Workbench or run via terminal:  
-  <!-- ```sql
-   source path/to/schema.sql;```-->
 
 
 ## Create tables
@@ -131,7 +158,7 @@ Configure JDBC connection
 
   **present inside connection class**
   - Update the database URL, username, and password in the Java code: <BR>
-  - String url = "jdbc:mysql://localhost:3306/hms_database";<BR>
+  - String url = "jdbc:mysql://localhost:3306/hospital_management_system.";<BR>
   - String username = "root";<BR>
   -String password = "12345";<BR>
 
