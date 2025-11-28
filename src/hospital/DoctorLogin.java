@@ -4,136 +4,158 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.ResultSet;
+import java.sql.*;
 
+/**
+ * DoctorLogin
+ * -----------------------------------
+ * Handles login UI and authentication for Doctors.
+ * Uses PreparedStatement for security,
+ * improved layout, OOP, and better readability.
+ */
 public class DoctorLogin extends JFrame implements ActionListener {
-    JFrame f;
-//    JPanel panel,blurPanel;// for later use
-    JLabel l1,l2,l3,l4,l5;
-    JTextField user1,iD;
-    JPasswordField password1;
-    JButton login,back;
-    DoctorLogin(){
-        f = new JFrame("Doctor Login Page");
-        f.setBackground(Color.WHITE);
-        f.setLayout(null);
 
-        f.setSize(800,570);
-        f.setLocation(300,100);
-        f.setVisible(true);
-        f.setResizable(false);
+    private JFrame frame;
+    private JLabel titleLabel, emailLabel, userLabel, passLabel, bgLabel;
+    private JTextField emailField, userField;
+    private JPasswordField passField;
+    private JButton loginBtn, backBtn;
 
+    public DoctorLogin() {
 
-        l1= new JLabel();
-        l1.setBounds(0,0,f.getWidth(),f.getHeight());
-        l1.setLayout(null);
+        // ---------- FRAME SETUP ----------
+        frame = new JFrame("Doctor Login Page");
+        frame.setSize(800, 570);
+        frame.setLocation(300, 100);
+        frame.setLayout(null);
+        frame.setResizable(false);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        ImageIcon img=new ImageIcon(ClassLoader.getSystemResource("hospital/icons/login.jpg"));
-        Image i=img.getImage().getScaledInstance(f.getWidth(),f.getHeight(),Image.SCALE_SMOOTH);
+        // ---------- BACKGROUND IMAGE ----------
+        bgLabel = new JLabel();
+        bgLabel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
+        bgLabel.setLayout(null);
 
-        ImageIcon img1=new ImageIcon(i);
-        l1.setIcon(img1);
+        ImageIcon img = new ImageIcon(ClassLoader.getSystemResource("hospital/icons/login.jpg"));
+        Image scaledImg = img.getImage().getScaledInstance(frame.getWidth(), frame.getHeight(), Image.SCALE_SMOOTH);
+        bgLabel.setIcon(new ImageIcon(scaledImg));
 
+        // ---------- TITLE ----------
+        titleLabel = new JLabel("Doctor Login Page");
+        titleLabel.setBounds(200, 30, 500, 50);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 32));
+        titleLabel.setForeground(Color.BLACK);
+        bgLabel.add(titleLabel);
 
-        l2=new JLabel("Doctor Login Page");
-        l2.setBounds(200,30,500,50);
-        l2.setFont(new Font("Airal",Font.BOLD,30));
-        l2.setForeground(Color.black);
-        l1.add(l2);
+        // ---------- EMAIL ----------
+        emailLabel = new JLabel("Email ID:");
+        emailLabel.setBounds(180, 180, 300, 40);
+        emailLabel.setFont(new Font("Arial", Font.BOLD, 26));
+        bgLabel.add(emailLabel);
 
-        l5=new JLabel("Email id: ");
-        l5.setBounds((f.getWidth()/2)-200,(f.getHeight()/2)-100,500,50);
-        l5.setFont(new Font("Airal",Font.BOLD,30));
-        l5.setForeground(Color.black);
-        l1.add(l5);
+        emailField = new JTextField();
+        emailField.setBounds(380, 185, 230, 30);
+        bgLabel.add(emailField);
 
-        iD =new JTextField();
-        iD.setBounds(l5.getX()+200,l5.getY()+10,200,30);
-        l1.add(iD);
+        // ---------- USERNAME ----------
+        userLabel = new JLabel("User Name:");
+        userLabel.setBounds(180, 240, 300, 40);
+        userLabel.setFont(new Font("Arial", Font.BOLD, 26));
+        bgLabel.add(userLabel);
 
-        l3=new JLabel("User Name: ");
-        l3.setBounds(l5.getX(),l5.getY()+75,500,50);
-        l3.setFont(new Font("Airal",Font.BOLD,30));
-        l3.setForeground(Color.black);
-        l1.add(l3);
+        userField = new JTextField();
+        userField.setBounds(380, 245, 230, 30);
+        bgLabel.add(userField);
 
-        user1 =new JTextField();
-        user1.setBounds(l3.getX()+200,l3.getY()+10,200,30);
-        l1.add(user1);
+        // ---------- PASSWORD ----------
+        passLabel = new JLabel("Password:");
+        passLabel.setBounds(180, 295, 300, 40);
+        passLabel.setFont(new Font("Arial", Font.BOLD, 26));
+        bgLabel.add(passLabel);
 
-        l4=new JLabel("Password: ");
-        l4.setBounds(l3.getX(),l3.getY()+50,500,50);
-        l4.setFont(new Font("Arial",Font.BOLD,30));
-        l4.setForeground(Color.black);
-        l1.add(l4);
+        passField = new JPasswordField();
+        passField.setBounds(380, 300, 230, 30);
+        bgLabel.add(passField);
 
-        password1 =new JPasswordField();
-        password1.setBounds(user1.getX(), user1.getY()+50,200,30);
-        l1.add(password1);
+        // ---------- LOGIN BUTTON ----------
+        loginBtn = new JButton("Login");
+        loginBtn.setBounds(180, 380, 180, 40);
+        loginBtn.addActionListener(this);
+        bgLabel.add(loginBtn);
 
-        login=new JButton("Login");
-        login.setBounds(l4.getX(),l4.getY()+100,190,35);
-        login.setBackground(new Color(255,255,255,180));
-        login.setForeground(Color.BLACK);
-        login.addActionListener(this);
-        l1.add(login);
+        // ---------- BACK BUTTON ----------
+        backBtn = new JButton("Previous");
+        backBtn.setBounds(430, 380, 180, 40);
+        backBtn.addActionListener(this);
+        bgLabel.add(backBtn);
 
-        back=new JButton("Previous");
-        back.setBounds(password1.getX(), login.getY(), 190,35);
-        back.setBackground(new Color(255,255,255,180));
-        back.setForeground(Color.BLACK);
-        back.addActionListener(this);
-        l1.add(back);
-
-        f.add(l1);
-//        f.setSize(800,570);
-//        f.setLocation(300,100);
-//        f.setVisible(true);
-//        f.setResizable(false);
+        frame.add(bgLabel);
+        frame.setVisible(true);
     }
 
+
+    // ===========================================================
+    // ACTION HANDLING
+    // ===========================================================
     @Override
     public void actionPerformed(ActionEvent ae) {
-        if (ae.getSource() == back) {
-            f.setVisible(false);
+
+        // -------- BACK BUTTON --------
+        if (ae.getSource() == backBtn) {
+            frame.setVisible(false);
             new Index();
             return;
         }
 
-        if (ae.getSource() == login) {
+        // -------- LOGIN BUTTON --------
+        if (ae.getSource() == loginBtn) {
+
+            String email = emailField.getText().trim();
+            String username = userField.getText().trim();
+            String password = String.valueOf(passField.getPassword()).trim();
+
+            if (email.isEmpty() || username.isEmpty() || password.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "All fields are required!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             try {
-                ConnectionClass obj = new ConnectionClass();
+                ConnectionClass db = new ConnectionClass();
+                Connection con = db.getConnection();
 
-                String name = user1.getText();
-                String password = password1.getText();
-//                int id = Integer.parseInt(iD.getText());
-                String mailId= iD.getText();
-                String qB = "SELECT * FROM hospital_management_system.doctor " +
-                        "WHERE emailId='" + mailId + "'" +
-                        " AND doctorName='" + name + "'" +
-                        " AND doctorPassword='" + password + "'";
+                // Secure SQL query (no injection)
+                String sql = "SELECT * FROM doctor WHERE emailId=? AND doctorName=? AND doctorPassword=?";
+                PreparedStatement stmt = con.prepareStatement(sql);
 
+                stmt.setString(1, email);
+                stmt.setString(2, username);
+                stmt.setString(3, password);
 
-                ResultSet rs = obj.stm.executeQuery(qB);
+                ResultSet rs = stmt.executeQuery();
 
                 if (rs.next()) {
-                    // Login success
-                    new ProfileDoctor(mailId);
-                    f.setVisible(false);
+                    // Successful login
+                    new ProfileDoctor(email);
+                    frame.setVisible(false);
+
                 } else {
-                    JOptionPane.showMessageDialog(null,
-                            "Wrong ID, Username, or Password",
+                    JOptionPane.showMessageDialog(frame,
+                            "Wrong Email, Username, or Password!",
                             "Login Failed",
                             JOptionPane.ERROR_MESSAGE);
                 }
 
+                stmt.close();
+                db.closeConnection();
+
             } catch (Exception e) {
                 e.printStackTrace();
+                JOptionPane.showMessageDialog(frame, "Error connecting to database", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
     public static void main(String[] args) {
-        new  DoctorLogin();
+        new DoctorLogin();
     }
 }

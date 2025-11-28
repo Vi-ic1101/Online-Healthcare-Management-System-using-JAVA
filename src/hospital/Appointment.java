@@ -5,11 +5,22 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.sql.*;
 
+/**
+ * Appointment Page
+ * -----------------------
+ * Displays all appointments for a specific doctor.
+ * Shows doctor info, patient info, date/time, and disease description.
+ * Uses JTable + DefaultTableModel for clean tabular display.
+ */
 public class Appointment extends JFrame {
 
-    JTable table;
-    DefaultTableModel model;
+    JTable table;              // Table to display appointments
+    DefaultTableModel model;   // Table model to store row data
 
+    /**
+     * Constructor
+     * @param doctorId The specific doctor's ID whose appointments must be displayed.
+     */
     public Appointment(int doctorId) {
 
         setTitle("Doctor Appointments");
@@ -18,7 +29,9 @@ public class Appointment extends JFrame {
         setLayout(new BorderLayout());
         setResizable(false);
 
-        // Table Columns
+        // ---------------------------
+        // TABLE COLUMN HEADERS
+        // ---------------------------
         String[] columnNames = {
                 "Appointment ID",
                 "Doctor ID",
@@ -30,20 +43,21 @@ public class Appointment extends JFrame {
                 "Disease / Description"
         };
 
+        // Creating model + table
         model = new DefaultTableModel(columnNames, 0);
         table = new JTable(model);
-        JScrollPane sp = new JScrollPane(table);
 
+        JScrollPane sp = new JScrollPane(table);
         add(sp, BorderLayout.CENTER);
 
+        // Load all appointment data for this doctor
         loadAppointmentData(doctorId);
 
+        // BACK BUTTON
         JButton back = new JButton("Back");
         back.addActionListener(e -> {
             setVisible(false);
-
-            // Get emailId for going back (optional)
-            new DoctorLogin();
+            new DoctorLogin();     // Go back to doctor login page
         });
 
         add(back, BorderLayout.SOUTH);
@@ -52,14 +66,16 @@ public class Appointment extends JFrame {
     }
 
 
-    // ============================================
-    // ✔ LOAD APPOINTMENTS FOR THIS DOCTOR
-    // ============================================
+    /**
+     * Load all appointments related to the given doctor ID.
+     * Fetches data by joining appointment, doctor, and patient tables.
+     */
     private void loadAppointmentData(int doctorId) {
 
         try {
             ConnectionClass obj = new ConnectionClass();
 
+            // SQL JOIN to fetch a complete appointment record
             String q =
                     "SELECT a.appointmentId, " +
                             "d.doctorId, d.doctorName, " +
@@ -72,6 +88,7 @@ public class Appointment extends JFrame {
 
             ResultSet rs = obj.stm.executeQuery(q);
 
+            // Add each row to the table model
             while (rs.next()) {
                 Object[] row = {
                         rs.getInt("appointmentId"),
@@ -93,8 +110,10 @@ public class Appointment extends JFrame {
         }
     }
 
-
+    /**
+     * Main Method (for testing)
+     */
     public static void main(String[] args) {
-        new Appointment(1); // Test manually by passing doctorId
+        new Appointment(1); // Run by passing doctorId manually
     }
 }

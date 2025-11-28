@@ -9,7 +9,7 @@ public class ProfileDoctor extends JFrame {
 
     JLabel lId, lName, lAddress, lDept, lPhone, lEmail;
     JLabel vId, vName, vAddress, vDept, vPhone, vEmail;
-    int doctorId; // store doctorId for fetching appointments
+    int doctorId;
 
     public ProfileDoctor(String emailId) {
         setTitle("Doctor Profile");
@@ -52,7 +52,7 @@ public class ProfileDoctor extends JFrame {
         lEmail.setBounds(100, 280, 200, 25);
         panel.add(lEmail);
 
-        // Value labels
+        // Value Labels
         vId = new JLabel();
         vId.setBounds(300, 80, 200, 25);
         panel.add(vId);
@@ -94,67 +94,83 @@ public class ProfileDoctor extends JFrame {
         add(panel);
         setVisible(true);
 
-        // Load doctor data
         loadDoctorData(emailId);
     }
 
+    // =======================================
+    // Load doctor data via secure query
+    // =======================================
     private void loadDoctorData(String emailId) {
         try {
             ConnectionClass obj = new ConnectionClass();
-            String q = "SELECT * FROM doctor WHERE emailId = '" + emailId + "'";
-            ResultSet rs = obj.stm.executeQuery(q);
+
+            String q = "SELECT * FROM doctor WHERE emailId = ?";
+            PreparedStatement ps = obj.con.prepareStatement(q);
+            ps.setString(1, emailId);
+
+            ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                doctorId = rs.getInt("doctorId"); // store doctorId
+
+                doctorId = rs.getInt("doctorId");
+
                 vId.setText(String.valueOf(doctorId));
                 vName.setText(rs.getString("doctorName"));
                 vAddress.setText(rs.getString("address"));
                 vDept.setText(rs.getString("doctorDepartment"));
                 vPhone.setText(rs.getString("phone"));
                 vEmail.setText(rs.getString("emailId"));
+
             } else {
                 JOptionPane.showMessageDialog(this, "Doctor not found!");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
-    // ==========================
-    // Show all appointments in a JTable
-    // ==========================
+    // =======================================
+    // Show appointments in JTable
+    // =======================================
     private void showAppointments() {
+
         JFrame frame = new JFrame("Appointments for Dr. " + vName.getText());
         frame.setSize(800, 400);
         frame.setLocationRelativeTo(null);
 
-        String[] columns = {"Appointment ID", "Patient Name", "Department", "Date", "Time", "Status"};
-        DefaultTableModel model = new DefaultTableModel(columns, 0);
+        String[] cols = {"Appointment ID", "Patient Name", "Department", "Date", "Time", "Status"};
+        DefaultTableModel model = new DefaultTableModel(cols, 0);
+
         JTable table = new JTable(model);
         JScrollPane scroll = new JScrollPane(table);
         frame.add(scroll);
 
         try {
             ConnectionClass obj = new ConnectionClass();
-            String query = "SELECT * FROM appointment WHERE doctorId = " + doctorId;
-            ResultSet rs = obj.stm.executeQuery(query);
-            while (rs.next()) {
-                int appointmentId = rs.getInt("appointmentId");
-                String patientName = rs.getString("patientName");
-                String department = rs.getString("doctorDepartment");
-                String date = rs.getString("docAppointmentDate");
-                String time = rs.getString("docAppointmentTime");
-                String status = rs.getString("docAppointmentStatus");
 
-                model.addRow(new Object[]{appointmentId, patientName, department, date, time, status});
+            String query = "SELECT appointmentId, patientName, doctorDepartment, docAppointmentDate, docAppointmentTime, docAppointmentStatus FROM appointment WHERE doctorId = ?";
+            PreparedStatement ps = obj.con.prepareStatement(query);
+            ps.setInt(1, doctorId);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                        rs.getInt("appointmentId"),
+                        rs.getString("patientName"),
+                        rs.getString("doctorDepartment"),
+                        rs.getString("docAppointmentDate"),
+                        rs.getString("docAppointmentTime"),
+                        rs.getString("docAppointmentStatus")
+                });
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
         frame.setVisible(true);
     }
 
     public static void main(String[] args) {
-        new ProfileDoctor("test@mail.com"); // Example
+        new ProfileDoctor("test@mail.com");
     }
 }

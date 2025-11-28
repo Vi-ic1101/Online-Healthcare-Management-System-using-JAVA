@@ -222,3 +222,5 @@ public class RegistrationPage extends JFrame implements ActionListener {
         new RegistrationPage();
     }
 }
+
+

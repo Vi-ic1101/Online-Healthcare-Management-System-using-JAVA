@@ -3,14 +3,23 @@ package hospital;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.sql.ResultSet;
+import java.sql.*;
 
+/**
+ * Refactored AdminLogin:
+ * - Uses AdminDAO for DB access (PreparedStatement + try-with-resources)
+ * - Uses SwingWorker to perform login off the EDT
+ * - Basic Admin model included
+ *
+ * Note: AdminDAO is implemented as an inner static class for convenience.
+ * You can move it to its own file (recommended for larger projects).
+ */
 public class AdminLogin extends JFrame implements ActionListener {
-    JFrame f;
-    JLabel l1, l2, l3, l4, l5;
-    JTextField user1, iD;
-    JPasswordField password1;
-    JButton login, back;
+    private JFrame f;
+    private JLabel l1, l2, l3, l4, l5;
+    private JTextField user1, iD;
+    private JPasswordField password1;
+    private JButton login, back;
 
     public AdminLogin() {
         f = new JFrame("Admin Login Page");
@@ -18,7 +27,6 @@ public class AdminLogin extends JFrame implements ActionListener {
         f.setLayout(null);
         f.setSize(800, 570);
         f.setLocation(300, 100);
-        f.setVisible(true);
         f.setResizable(false);
 
         l1 = new JLabel();
@@ -26,8 +34,10 @@ public class AdminLogin extends JFrame implements ActionListener {
         l1.setLayout(null);
 
         ImageIcon img = new ImageIcon(ClassLoader.getSystemResource("hospital/icons/login.jpg"));
-        Image i = img.getImage().getScaledInstance(f.getWidth(), f.getHeight(), Image.SCALE_SMOOTH);
-        l1.setIcon(new ImageIcon(i));
+        if (img != null) {
+            Image i = img.getImage().getScaledInstance(f.getWidth(), f.getHeight(), Image.SCALE_SMOOTH);
+            l1.setIcon(new ImageIcon(i));
+        }
 
         l2 = new JLabel("Admin Login Page");
         l2.setBounds(200, 30, 500, 50);
@@ -80,6 +90,7 @@ public class AdminLogin extends JFrame implements ActionListener {
         l1.add(back);
 
         f.add(l1);
+        f.setVisible(true);
     }
 
     @Override
@@ -87,32 +98,126 @@ public class AdminLogin extends JFrame implements ActionListener {
         if (ae.getSource() == back) {
             f.dispose();
             new Index();
+            return;
         }
 
         if (ae.getSource() == login) {
-            try {
-                ConnectionClass obj = new ConnectionClass();
-                String email = iD.getText();
-                String password = password1.getText();
+            // Basic validation
+            final String username = user1.getText().trim();
+            final String email = iD.getText().trim();
+            final String password = new String(password1.getPassword());
 
-                String qB = "SELECT * FROM admin WHERE emailID='" + email + "' AND adminPassword='" + password + "'";
-                ResultSet rs = obj.stm.executeQuery(qB);
-
-                if (rs.next()) {
-                    JOptionPane.showMessageDialog(f, "Login successful!");
-                    f.setVisible(false);
-                    // Redirect to Admin Dashboard (you can create a separate class)
-                    new ProfileAdmin(email);
-                } else {
-                    JOptionPane.showMessageDialog(f, "Wrong email or password!");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                JOptionPane.showMessageDialog(f, "Please enter username, email and password.");
+                return;
             }
+
+            // Use SwingWorker to avoid blocking the EDT
+            login.setEnabled(false);
+            back.setEnabled(false);
+            new SwingWorker<Admin, Void>() {
+                private Exception error = null;
+
+                @Override
+                protected Admin doInBackground() {
+                    try {
+                        AdminDAO dao = new AdminDAO();
+                        return dao.authenticate(email, password, username);
+                    } catch (Exception ex) {
+                        error = ex;
+                        return null;
+                    }
+                }
+
+                @Override
+                protected void done() {
+                    login.setEnabled(true);
+                    back.setEnabled(true);
+                    if (error != null) {
+                        error.printStackTrace();
+                        JOptionPane.showMessageDialog(f, "Login error: " + error.getMessage());
+                        return;
+                    }
+                    try {
+                        Admin admin = get();
+                        if (admin != null) {
+                            JOptionPane.showMessageDialog(f, "Login successful!");
+                            f.setVisible(false);
+                            // Redirect to ProfileAdmin with admin email
+                            new ProfileAdmin(admin.getEmail());
+                        } else {
+                            JOptionPane.showMessageDialog(f, "Wrong email, username, or password!");
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(f, "Unexpected error during login.");
+                    }
+                }
+            }.execute();
         }
     }
 
     public static void main(String[] args) {
-        new AdminLogin();
+        SwingUtilities.invokeLater(AdminLogin::new);
     }
+
+    // -------------------------
+    // Admin model (simple POJO)
+    // -------------------------
+    public static class Admin {
+        private final int id;
+        private final String name;
+        private final String email;
+
+        public Admin(int id, String name, String email) {
+            this.id = id;
+            this.name = name;
+            this.email = email;
+        }
+
+        public int getId() { return id; }
+        public String getName() { return name; }
+        public String getEmail() { return email; }
+    }
+
+    // -------------------------
+    // AdminDAO (small, safe, uses PreparedStatement)
+    // -------------------------
+    public static class AdminDAO {
+
+        /**
+         * Authenticate admin by email, password and username.
+         * Returns Admin object if credentials match; otherwise null.
+         */
+        public Admin authenticate(String email, String password, String username) throws SQLException {
+            // Using your ConnectionClass which exposes `con` field.
+            ConnectionClass connObj = new ConnectionClass();
+            Connection conn = connObj.con;
+            if (conn == null) throw new SQLException("Unable to obtain DB connection.");
+
+            String sql = "SELECT adminId, adminName, emailID FROM admin WHERE emailID = ? AND adminPassword = ? AND adminName = ?";
+
+            try (PreparedStatement pst = conn.prepareStatement(sql)) {
+                pst.setString(1, email);
+                pst.setString(2, password);
+                pst.setString(3, username);
+
+                try (ResultSet rs = pst.executeQuery()) {
+                    if (rs.next()) {
+                        int id = rs.getInt("adminId");
+                        String name = rs.getString("adminName");
+                        String mail = rs.getString("emailID");
+                        return new Admin(id, name, mail);
+                    } else {
+                        return null;
+                    }
+                }
+            } finally {
+                // Do not close connObj.con here because ConnectionClass currently manages it.
+                // If you refactor ConnectionClass to provide/close connections per-call, close here.
+            }
+        }
+    }
+
+
 }

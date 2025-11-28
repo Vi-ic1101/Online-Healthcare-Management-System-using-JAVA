@@ -6,14 +6,15 @@ import java.awt.event.*;
 import java.sql.*;
 
 public class ProfilePatient extends JFrame implements ActionListener {
+
     JFrame f;
     JLabel titleLabel, idLabel, nameLabel, emailLabel, phoneLabel, addressLabel;
     JLabel idValue, nameValue, emailValue, phoneValue, addressValue;
     JButton bookAppointment, logout;
-    String patientName;
+    String emailId;  // safer unique value
 
-    public ProfilePatient(String patientName) {
-        this.patientName = patientName;
+    public ProfilePatient(String emailId) {
+        this.emailId = emailId;
 
         f = new JFrame("Patient Profile");
         f.setSize(700, 500);
@@ -83,12 +84,20 @@ public class ProfilePatient extends JFrame implements ActionListener {
         f.setVisible(true);
     }
 
+    // =============================
+    // Fetch Patient Data (SAFE)
+    // =============================
     private void fetchPatientData() {
         try {
             ConnectionClass obj = new ConnectionClass();
-            String query = "SELECT * FROM hospital_management_system.patient WHERE patientName='" + patientName + "'";
-            ResultSet rs = obj.stm.executeQuery(query);
-            if(rs.next()) {
+
+            String query = "SELECT * FROM hospital_management_system.patient WHERE emailId = ?";
+            PreparedStatement pstmt = obj.con.prepareStatement(query);
+            pstmt.setString(1, emailId);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
                 idValue.setText(String.valueOf(rs.getInt("patientId")));
                 nameValue.setText(rs.getString("patientName"));
                 emailValue.setText(rs.getString("emailId"));
@@ -97,7 +106,8 @@ public class ProfilePatient extends JFrame implements ActionListener {
             } else {
                 JOptionPane.showMessageDialog(f, "Patient data not found!");
             }
-        } catch(Exception e) {
+
+        } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(f, "Database error!");
         }
@@ -105,17 +115,19 @@ public class ProfilePatient extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        if(ae.getSource() == logout) {
+
+        if (ae.getSource() == logout) {
             f.setVisible(false);
             new PatientLogin();
         }
-        if(ae.getSource() == bookAppointment) {
+
+        if (ae.getSource() == bookAppointment) {
             f.setVisible(false);
-            new AppointmentBooking(patientName);
+            new AppointmentBooking(emailId);  // pass email as unique identifier
         }
     }
 
     public static void main(String[] args) {
-        new ProfilePatient("testPatient"); // Example patient
+        new ProfilePatient("test@mail.com");
     }
 }
