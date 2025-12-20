@@ -1,4 +1,5 @@
-package hospital;
+
+        package hospital;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,7 +9,7 @@ import java.awt.event.ActionListener;
 public class Index extends JFrame implements ActionListener {
 
     JLabel bgLabel, title1, title2, title3;
-    JButton bDoctor, bPatient, bAdmin, bRegister;
+    JButton bDoctor, bPatient, bAdmin, bPharmacist, bReceptionist, bBack;
 
     public Index() {
 
@@ -47,28 +48,41 @@ public class Index extends JFrame implements ActionListener {
 
         // Buttons
         bDoctor = new JButton("Doctor");
-        bDoctor.setBounds(50, 350, 150, 40);
+        bDoctor.setBounds(50, 330, 150, 40);
         styleButton(bDoctor);
         bDoctor.addActionListener(this);
         bgLabel.add(bDoctor);
 
         bPatient = new JButton("Patient");
-        bPatient.setBounds(250, 350, 150, 40);
+        bPatient.setBounds(250, 330, 150, 40);
         styleButton(bPatient);
         bPatient.addActionListener(this);
         bgLabel.add(bPatient);
 
         bAdmin = new JButton("Admin");
-        bAdmin.setBounds(50, 400, 150, 40);
+        bAdmin.setBounds(50, 390, 150, 40);
         styleButton(bAdmin);
         bAdmin.addActionListener(this);
         bgLabel.add(bAdmin);
 
-        bRegister = new JButton("Register");
-        bRegister.setBounds(250, 400, 150, 40);
-        styleButton(bRegister);
-        bRegister.addActionListener(this);
-        bgLabel.add(bRegister);
+        bPharmacist = new JButton("Pharmacist");
+        bPharmacist.setBounds(250, 390, 150, 40);
+        styleButton(bPharmacist);
+        bPharmacist.addActionListener(this);
+        bgLabel.add(bPharmacist);
+
+        bReceptionist = new JButton("Receptionist");
+        bReceptionist.setBounds(150, 450, 150, 40);
+        styleButton(bReceptionist);
+        bReceptionist.addActionListener(this);
+        bgLabel.add(bReceptionist);
+
+        // Back button to MainPage
+        bBack = new JButton("Back");
+        bBack.setBounds(650, 20, 100, 30);
+        styleButton(bBack);
+        bBack.addActionListener(this);
+        bgLabel.add(bBack);
 
         // Center window
         setLocationRelativeTo(null);
@@ -96,9 +110,17 @@ public class Index extends JFrame implements ActionListener {
             dispose();
             new AdminLogin();
         }
-        else if (e.getSource() == bRegister) {
+        else if (e.getSource() == bPharmacist) {
             dispose();
-            new RegistrationPage();
+            new PharmacistLogin();
+        }
+        else if (e.getSource() == bReceptionist) {
+            dispose();
+            new ReceptionistLogin();
+        }
+        else if (e.getSource() == bBack) {
+            dispose();
+            new MainPage();   // go back to main page
         }
     }
 

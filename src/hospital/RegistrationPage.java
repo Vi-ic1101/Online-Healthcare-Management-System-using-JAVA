@@ -74,7 +74,7 @@ public class RegistrationPage extends JFrame implements ActionListener {
         lRole.setBounds(140, 300, 200, 35);
         lRole.setFont(new Font("Arial", Font.PLAIN, 20));
         background.add(lRole);
-        String roles[] = {"Select", "Doctor", "Admin", "Patient"};
+        String roles[] = {"Select", "Doctor", "Admin", "Patient","Pharmacist","Receptionist"};
         tRole = new JComboBox<>(roles);
         tRole.setBounds(330, 300, 250, 30);
         background.add(tRole);
@@ -136,8 +136,8 @@ public class RegistrationPage extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == btnBack) {
-            f.setVisible(false);
-            new Index();
+            f.dispose();
+            new MainPage();
         }
 
         if (ae.getSource() == btnRegister) {
@@ -201,6 +201,30 @@ public class RegistrationPage extends JFrame implements ActionListener {
                         psAdmin.setString(6, confirmPassword);
                         psAdmin.executeUpdate();
                         break;
+                    case "Pharmacist":
+//                      phoneNumber, address, licenseNumber, qualification, experienceYears, shift, status, createdAt
+                        query = "INSERT INTO pharmacist (pharmacistName, address, phoneNumber, emailId, password, ConfirmPassword) VALUES (?, ?, ?, ?, ?, ?)";
+                        PreparedStatement psPharmacist = obj.con.prepareStatement(query);
+                        psPharmacist.setString(1, name);
+                        psPharmacist.setString(2, address);
+                        psPharmacist.setString(3, phone);
+                        psPharmacist.setString(4, email);
+                        psPharmacist.setString(5, password);
+                        psPharmacist.setString(6, confirmPassword);
+                        psPharmacist.executeUpdate();
+                        break;
+                    case "Receptionist":
+//                     receptionistId, receptionistName, emailID, receptionistPassword, phone, address, confirmPassword
+                        query = "INSERT INTO Receptionist (receptionistName, address, phone, emailID, receptionistPassword, ConfirmPassword) VALUES (?, ?, ?, ?, ?, ?)";
+                        PreparedStatement psReceptionist = obj.con.prepareStatement(query);
+                        psReceptionist.setString(1, name);
+                        psReceptionist.setString(2, address);
+                        psReceptionist.setString(3, phone);
+                        psReceptionist.setString(4, email);
+                        psReceptionist.setString(5, password);
+                        psReceptionist.setString(6, confirmPassword);
+                        psReceptionist.executeUpdate();
+                        break;
                 }
 
                 JOptionPane.showMessageDialog(f, "Registration Successful!");
@@ -210,6 +234,8 @@ public class RegistrationPage extends JFrame implements ActionListener {
                 if (role.equals("Doctor")) new DoctorLogin();
                 else if (role.equals("Patient")) new Index();
                 else if (role.equals("Admin")) new AdminLogin();
+                else if (role.equals("Pharmacist")) new PharmacistLogin();
+                else if (role.equals("Receptionist")) new PharmacistLogin();
 
             } catch (Exception e) {
                 e.printStackTrace();

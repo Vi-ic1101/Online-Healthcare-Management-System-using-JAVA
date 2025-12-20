@@ -5,148 +5,121 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 
-/**
- * PatientLogin
- * -----------------------------------
- * Handles login UI and authentication for Patients.
- * Uses PreparedStatement for secure SQL, better GUI layout,
- * and proper OOP practices.
- */
 public class PatientLogin extends JFrame implements ActionListener {
 
-    private JFrame frame;
-    private JLabel titleLabel, userLabel, emailLabel, passLabel, warnLabel, bgLabel;
-    private JTextField userField, emailField;
-    private JPasswordField passField;
-    private JButton loginBtn, backBtn;
+    JLabel titleLabel, userLabel, emailLabel, passLabel, warnLabel, bgLabel;
+    JTextField userField, emailField;
+    JPasswordField passField;
+    JButton loginBtn, backBtn;
 
     public PatientLogin() {
 
-        // ---------- FRAME SETUP ----------
-        frame = new JFrame("Patient Login Page");
-        frame.setSize(800, 570);
-        frame.setLayout(null);
-        frame.setLocation(300, 100);
-        frame.setResizable(false);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("Patient Login Page");
+        setSize(800, 570);
+        setLayout(null);
+        setLocation(300, 100);
+        setResizable(false);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // ---------- BACKGROUND ----------
         bgLabel = new JLabel();
-        bgLabel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
+        bgLabel.setBounds(0, 0, getWidth(), getHeight());
         bgLabel.setLayout(null);
 
         ImageIcon img = new ImageIcon(ClassLoader.getSystemResource("hospital/icons/login.jpg"));
-        Image scaledImg = img.getImage().getScaledInstance(frame.getWidth(), frame.getHeight(), Image.SCALE_SMOOTH);
+        Image scaledImg = img.getImage().getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
         bgLabel.setIcon(new ImageIcon(scaledImg));
+        add(bgLabel);
 
-        // ---------- TITLE ----------
         titleLabel = new JLabel("Patient Login Page");
         titleLabel.setBounds(220, 30, 500, 50);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 30));
-        frame.add(titleLabel);
+        bgLabel.add(titleLabel);
 
-        // ---------- USERNAME ----------
         userLabel = new JLabel("Username:");
-        userLabel.setBounds(150, 120, 200, 30);
-        userLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        frame.add(userLabel);
+        userLabel.setBounds(225, 180, 200, 40);
+        userLabel.setFont(new Font("Arial", Font.BOLD, 25));
+        bgLabel.add(userLabel);
 
         userField = new JTextField();
-        userField.setBounds(300, 120, 200, 30);
-        frame.add(userField);
+        userField.setBounds(userLabel.getX() + 150, userLabel.getY(), 200, 30);
+        bgLabel.add(userField);
 
-        // ---------- EMAIL ----------
         emailLabel = new JLabel("Email ID:");
-        emailLabel.setBounds(150, 170, 200, 30);
-        emailLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        frame.add(emailLabel);
+        emailLabel.setBounds(userLabel.getX(), userLabel.getY() + 50, 200, 40);
+        emailLabel.setFont(new Font("Arial", Font.BOLD, 25));
+        bgLabel.add(emailLabel);
 
         emailField = new JTextField();
-        emailField.setBounds(300, 170, 200, 30);
-        frame.add(emailField);
+        emailField.setBounds(userField.getX(), userField.getY() + 50, 200, 30);
+        bgLabel.add(emailField);
 
-        // ---------- PASSWORD ----------
         passLabel = new JLabel("Password:");
-        passLabel.setBounds(150, 220, 200, 30);
-        passLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        frame.add(passLabel);
+        passLabel.setBounds(emailLabel.getX(), emailLabel.getY() + 50, 200, 40);
+        passLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        bgLabel.add(passLabel);
 
         passField = new JPasswordField();
-        passField.setBounds(300, 220, 200, 30);
-        frame.add(passField);
+        passField.setBounds(emailField.getX(), emailField.getY() + 50, 200, 30);
+        bgLabel.add(passField);
 
-        // ---------- WARNING LABEL ----------
         warnLabel = new JLabel();
         warnLabel.setBounds(150, 260, 500, 25);
-        warnLabel.setFont(new Font("Arial", Font.PLAIN, 15));
         warnLabel.setForeground(Color.RED);
-        frame.add(warnLabel);
+        bgLabel.add(warnLabel);
 
-        // ---------- LOGIN BUTTON ----------
         loginBtn = new JButton("Login");
-        loginBtn.setBounds(150, 300, 120, 35);
+        loginBtn.setBounds(250, 350, 120, 35);
         loginBtn.addActionListener(this);
-        frame.add(loginBtn);
+        bgLabel.add(loginBtn);
 
-        // ---------- BACK BUTTON ----------
         backBtn = new JButton("Back");
-        backBtn.setBounds(300, 300, 120, 35);
+        backBtn.setBounds(loginBtn.getX() + 150, loginBtn.getY(), 120, 35);
         backBtn.addActionListener(this);
-        frame.add(backBtn);
+        bgLabel.add(backBtn);
 
-        frame.setVisible(true);
+        setVisible(true);
     }
 
-    // ===========================================================
-    // ACTION HANDLING
-    // ===========================================================
     @Override
     public void actionPerformed(ActionEvent ae) {
 
-        // -------- BACK BUTTON --------
         if (ae.getSource() == backBtn) {
-            frame.dispose();
+            dispose();
             new Index();
             return;
         }
 
-        // -------- LOGIN BUTTON --------
         if (ae.getSource() == loginBtn) {
 
             String username = userField.getText().trim();
             String email = emailField.getText().trim();
             String password = String.valueOf(passField.getPassword()).trim();
 
-            // Validate fields
             if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
-                warnLabel.setText("Please enter username, email, and password!");
+                warnLabel.setText("Please enter all fields!");
                 return;
             }
 
             try {
-                ConnectionClass db = new ConnectionClass();
-                Connection con = db.getConnection();
+                ConnectionClass obj = new ConnectionClass();
 
-                // Use PreparedStatement for secure login
-                String sql = "SELECT * FROM patient WHERE patientName=? AND emailId=? AND patientPassword=?";
-                PreparedStatement pstmt = con.prepareStatement(sql);
-                pstmt.setString(1, username);
-                pstmt.setString(2, email);
-                pstmt.setString(3, password);
+                String sql =
+                        "SELECT emailId FROM hospital_management_system.patient " +
+                                "WHERE patientName=? AND emailId=? AND patientPassword=?";
 
-                ResultSet rs = pstmt.executeQuery();
+                PreparedStatement ps = obj.con.prepareStatement(sql);
+                ps.setString(1, username);
+                ps.setString(2, email);
+                ps.setString(3, password);
+
+                ResultSet rs = ps.executeQuery();
 
                 if (rs.next()) {
-                    // Successful login
-                    frame.dispose();
-                    new ProfilePatient(username);
-
+                    dispose();
+                    new ProfilePatient(email);
                 } else {
-                    warnLabel.setText("Incorrect username, email, or password!");
+                    warnLabel.setText("Invalid login credentials!");
                 }
-
-                pstmt.close();
-                db.closeConnection();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -156,6 +129,6 @@ public class PatientLogin extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
-        new PatientLogin();
+        SwingUtilities.invokeLater(PatientLogin::new);
     }
 }

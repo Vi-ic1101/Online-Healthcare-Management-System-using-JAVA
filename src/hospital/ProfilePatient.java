@@ -7,127 +7,214 @@ import java.sql.*;
 
 public class ProfilePatient extends JFrame implements ActionListener {
 
-    JFrame f;
-    JLabel titleLabel, idLabel, nameLabel, emailLabel, phoneLabel, addressLabel;
+    JLabel bgLabel;
     JLabel idValue, nameValue, emailValue, phoneValue, addressValue;
     JButton bookAppointment, logout;
-    String emailId;  // safer unique value
+
+    String emailId, patientName;
 
     public ProfilePatient(String emailId) {
         this.emailId = emailId;
 
-        f = new JFrame("Patient Profile");
-        f.setSize(700, 500);
-        f.setLocation(350, 150);
-        f.setLayout(null);
-        f.setResizable(false);
+        setTitle("Patient Profile");
+        setSize(800, 550);
+        setLayout(null);
+        setLocation(350, 150);
+        setResizable(false);
 
-        titleLabel = new JLabel("Patient Profile");
-        titleLabel.setBounds(220, 20, 300, 40);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
-        f.add(titleLabel);
+        // ---------- BACKGROUND (SAME AS LOGIN) ----------
+        bgLabel = new JLabel();
+        bgLabel.setBounds(0, 0, getWidth(), getHeight());
+        bgLabel.setLayout(null);
 
-        // Labels
-        idLabel = new JLabel("Patient ID:");
-        idLabel.setBounds(100, 80, 150, 30);
-        f.add(idLabel);
+        ImageIcon img = new ImageIcon(
+                ClassLoader.getSystemResource("hospital/icons/profilePage.jpg")
+        );
+        Image scaledImg = img.getImage().getScaledInstance(
+                getWidth(), getHeight(), Image.SCALE_SMOOTH
+        );
+        bgLabel.setIcon(new ImageIcon(scaledImg));
+        add(bgLabel);
+
+        JLabel idLabel = new JLabel("Patient ID:");
+        idLabel.setBounds(150, 80, 110, 30);
+        idLabel.setFont(new Font("Arial", Font.BOLD, 14));
+
+        idLabel.setHorizontalAlignment(SwingConstants.CENTER); //  CENTER TEXT
+        idLabel.setVerticalAlignment(SwingConstants.CENTER);
+        idLabel.setOpaque(true);
+
+        idLabel.setForeground(Color.black);
+        idLabel.setBackground(Color.white);
+        bgLabel.add(idLabel);
+
+        JLabel nameLabel = new JLabel("Name:");
+        nameLabel.setBounds(
+                idLabel.getX(),
+                idLabel.getY() + 40,
+                idLabel.getWidth(),
+                30
+        );
+        nameLabel.setHorizontalAlignment(SwingConstants.CENTER); //  CENTER TEXT
+        nameLabel.setVerticalAlignment(SwingConstants.CENTER);
+        nameLabel.setOpaque(true);
+
+        nameLabel.setForeground(Color.black);
+        nameLabel.setBackground(Color.white);
+        nameLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        bgLabel.add(nameLabel);
+
+        JLabel emailLabel = new JLabel("Email:");
+        emailLabel.setBounds(
+                idLabel.getX(),
+                nameLabel.getY() + 40,
+                nameLabel.getWidth(),
+                30
+        );
+        emailLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        emailLabel.setHorizontalAlignment(SwingConstants.CENTER); //  CENTER TEXT
+        emailLabel.setVerticalAlignment(SwingConstants.CENTER);
+        emailLabel.setOpaque(true);
+
+        emailLabel.setForeground(Color.black);
+        emailLabel.setBackground(Color.white);
+        bgLabel.add(emailLabel);
+
+        JLabel phoneLabel = new JLabel("Phone:");
+        phoneLabel.setBounds(
+                idLabel.getX(),
+                emailLabel.getY() + 40,
+                emailLabel.getWidth(),
+                30
+        );
+
+        phoneLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        phoneLabel.setHorizontalAlignment(SwingConstants.CENTER); //  CENTER TEXT
+        phoneLabel.setVerticalAlignment(SwingConstants.CENTER);
+        phoneLabel.setOpaque(true);
+        phoneLabel.setForeground(Color.black);
+        phoneLabel.setBackground(Color.white);
+        bgLabel.add(phoneLabel);
+
+        JLabel addressLabel = new JLabel("Address:");
+        addressLabel.setBounds(
+                idLabel.getX(),
+                phoneLabel.getY() + 40,
+                phoneLabel.getWidth(),
+                30
+        );
+        addressLabel.setHorizontalAlignment(SwingConstants.CENTER); //  CENTER TEXT
+        addressLabel.setVerticalAlignment(SwingConstants.CENTER);
+        addressLabel.setOpaque(true);
+
+        addressLabel.setForeground(Color.black);
+        addressLabel.setBackground(Color.white);
+        addressLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        bgLabel.add(addressLabel);
+
+// ---------- VALUE LABELS (RELATIVE TO LABELS) ----------
+        int valueX = idLabel.getX() + 150;
 
         idValue = new JLabel();
-        idValue.setBounds(250, 80, 300, 30);
-        f.add(idValue);
+        idValue.setBounds(valueX, idLabel.getY(), 250, 30);
+        idValue.setOpaque(true);
+        idValue.setForeground(Color.black);
+        idValue.setBackground(Color.white);
 
-        nameLabel = new JLabel("Name:");
-        nameLabel.setBounds(100, 120, 150, 30);
-        f.add(nameLabel);
+        bgLabel.add(idValue);
 
         nameValue = new JLabel();
-        nameValue.setBounds(250, 120, 300, 30);
-        f.add(nameValue);
-
-        emailLabel = new JLabel("Email:");
-        emailLabel.setBounds(100, 160, 150, 30);
-        f.add(emailLabel);
+        nameValue.setBounds(valueX, nameLabel.getY(), 250, 30);
+        nameValue.setOpaque(true);
+        nameValue.setForeground(Color.black);
+        nameValue.setBackground(Color.white);
+        bgLabel.add(nameValue);
 
         emailValue = new JLabel();
-        emailValue.setBounds(250, 160, 300, 30);
-        f.add(emailValue);
-
-        phoneLabel = new JLabel("Phone:");
-        phoneLabel.setBounds(100, 200, 150, 30);
-        f.add(phoneLabel);
+        emailValue.setBounds(valueX, emailLabel.getY(), 250, 30);
+        emailValue.setOpaque(true);
+        emailValue.setBackground(Color.white);
+        emailValue.setForeground(Color.black);
+        bgLabel.add(emailValue);
 
         phoneValue = new JLabel();
-        phoneValue.setBounds(250, 200, 300, 30);
-        f.add(phoneValue);
-
-        addressLabel = new JLabel("Address:");
-        addressLabel.setBounds(100, 240, 150, 30);
-        f.add(addressLabel);
+        phoneValue.setBounds(valueX, phoneLabel.getY(), 250, 30);
+        phoneValue.setOpaque(true);
+        phoneValue.setForeground(Color.black);
+        phoneValue.setBackground(Color.white);
+        bgLabel.add(phoneValue);
 
         addressValue = new JLabel();
-        addressValue.setBounds(250, 240, 300, 30);
-        f.add(addressValue);
+        addressValue.setBounds(valueX, addressLabel.getY(), 250, 30);
+        addressValue.setOpaque(true);
+        addressValue.setForeground(Color.black);
+        addressValue.setBackground(Color.white);
+        bgLabel.add(addressValue);
 
-        // Buttons
+
         bookAppointment = new JButton("Book Appointment");
         bookAppointment.setBounds(150, 350, 180, 40);
         bookAppointment.addActionListener(this);
-        f.add(bookAppointment);
+        bgLabel.add(bookAppointment);
 
         logout = new JButton("Logout");
         logout.setBounds(370, 350, 180, 40);
         logout.addActionListener(this);
-        f.add(logout);
+        bgLabel.add(logout);
 
         fetchPatientData();
-
-        f.setVisible(true);
+        setVisible(true);
     }
 
-    // =============================
-    // Fetch Patient Data (SAFE)
-    // =============================
+    private JLabel label(String t, int x, int y) {
+        JLabel l = new JLabel(t);
+        l.setBounds(x, y, 150, 30);
+        l.setForeground(Color.BLACK);
+        return l;
+    }
+
+    private JLabel value(int x, int y) {
+        JLabel l = new JLabel();
+        l.setBounds(x, y, 300, 30);
+        l.setForeground(Color.BLACK);
+        return l;
+    }
+
     private void fetchPatientData() {
         try {
             ConnectionClass obj = new ConnectionClass();
-
-            String query = "SELECT * FROM hospital_management_system.patient WHERE emailId = ?";
-            PreparedStatement pstmt = obj.con.prepareStatement(query);
-            pstmt.setString(1, emailId);
-
-            ResultSet rs = pstmt.executeQuery();
+            PreparedStatement ps = obj.con.prepareStatement(
+                    "SELECT * FROM patient WHERE emailId=?"
+            );
+            ps.setString(1, emailId);
+            ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                idValue.setText(String.valueOf(rs.getInt("patientId")));
-                nameValue.setText(rs.getString("patientName"));
+                patientName = rs.getString("patientName");
+                idValue.setText(rs.getString("patientId"));
+                nameValue.setText(patientName);
                 emailValue.setText(rs.getString("emailId"));
                 phoneValue.setText(rs.getString("phone"));
                 addressValue.setText(rs.getString("address"));
-            } else {
-                JOptionPane.showMessageDialog(f, "Patient data not found!");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(f, "Database error!");
         }
     }
 
-    @Override
     public void actionPerformed(ActionEvent ae) {
-
         if (ae.getSource() == logout) {
-            f.setVisible(false);
+            dispose();
             new PatientLogin();
         }
 
         if (ae.getSource() == bookAppointment) {
-            f.setVisible(false);
-            new AppointmentBooking(emailId);  // pass email as unique identifier
+            dispose();
+            new AppointmentBooking(emailId, patientName);
         }
     }
 
     public static void main(String[] args) {
-        new ProfilePatient("test@mail.com");
+        new ProfilePatient("email.com");
     }
 }

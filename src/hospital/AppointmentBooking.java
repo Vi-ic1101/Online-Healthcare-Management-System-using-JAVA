@@ -6,311 +6,165 @@ import java.awt.event.*;
 import java.sql.*;
 import java.util.ArrayList;
 
-/**
- * AppointmentBooking
- * -------------------
- * Allows a patient to book an appointment with a doctor.
- * Patient name is passed from ProfilePatient.
- */
 public class AppointmentBooking extends JFrame implements ActionListener {
 
     JFrame f;
-
-    // Labels
-    JLabel titleLabel, deptLabel, doctorLabel, patientLabel, dateLabel, timeLabel;
-
-    // Dropdowns
     JComboBox<String> deptBox, doctorBox, dateBox, timeBox;
-
-    // Buttons
     JButton book, back;
 
-    // Holds the name of the patient using this window
-    String patientName;
+    String patientEmail, patientName;
 
-
-
-    // =====================================================
-    //  CONSTRUCTOR — SETS UP THE APPOINTMENT BOOKING WINDOW
-    // =====================================================
-    public AppointmentBooking(String patientName) {
-
+    public AppointmentBooking(String patientEmail, String patientName) {
+        this.patientEmail = patientEmail;
         this.patientName = patientName;
 
         f = new JFrame("Book Appointment");
         f.setSize(700, 500);
         f.setLocation(350, 150);
         f.setLayout(null);
-        f.setResizable(false);
 
-        // Window Title
-        titleLabel = new JLabel("Appointment Booking");
-        titleLabel.setBounds(180, 20, 400, 40);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 30));
-        f.add(titleLabel);
+        f.add(label("Appointment Booking", 200, 20, 30, true));
+        f.add(label("Department:", 100, 80));
+        f.add(label("Doctor:", 100, 130));
+        f.add(label("Patient: " + patientName, 100, 180));
+        f.add(label("Date:", 100, 230));
+        f.add(label("Time Slot:", 100, 280));
 
+        deptBox = box(250, 80);
+        doctorBox = box(250, 130);
+        dateBox = box(250, 230);
+        timeBox = box(250, 280);
 
-
-        // =======================
-        //  DEPARTMENT SELECTION
-        // =======================
-        deptLabel = new JLabel("Department:");
-        deptLabel.setBounds(100, 80, 150, 30);
-        f.add(deptLabel);
-
-        deptBox = new JComboBox<>();
-        deptBox.setBounds(250, 80, 300, 30);
-
-        // When department changes → update doctor list
         deptBox.addActionListener(e -> loadDoctors());
-        f.add(deptBox);
 
+        book = button("Book", 180, 350);
+        back = button("Back", 400, 350);
 
-
-        // =======================
-        //  DOCTOR SELECTION
-        // =======================
-        doctorLabel = new JLabel("Doctor:");
-        doctorLabel.setBounds(100, 130, 150, 30);
-        f.add(doctorLabel);
-
-        doctorBox = new JComboBox<>();
-        doctorBox.setBounds(250, 130, 300, 30);
-        f.add(doctorBox);
-
-
-
-        // ===========================
-        //  PATIENT NAME (AUTO-FILLED)
-        // ===========================
-        patientLabel = new JLabel("Patient: " + patientName);
-        patientLabel.setBounds(100, 180, 400, 30);
-        f.add(patientLabel);
-
-
-
-        // =======================
-        //  DATE SELECTION
-        // =======================
-        dateLabel = new JLabel("Date:");
-        dateLabel.setBounds(100, 230, 150, 30);
-        f.add(dateLabel);
-
-        dateBox = new JComboBox<>();
-        dateBox.setBounds(250, 230, 300, 30);
-
-        // Add next 7 days automatically
-        java.time.LocalDate today = java.time.LocalDate.now();
-        for (int i = 0; i < 7; i++) {
-            dateBox.addItem(today.plusDays(i).toString());
-        }
-
-        f.add(dateBox);
-
-
-
-        // =======================
-        //  TIME SLOT SELECTION
-        // =======================
-        timeLabel = new JLabel("Time Slot:");
-        timeLabel.setBounds(100, 280, 150, 30);
-        f.add(timeLabel);
-
-        timeBox = new JComboBox<>();
-        timeBox.setBounds(250, 280, 300, 30);
-
-        populateTimeSlots();
-        f.add(timeBox);
-
-
-
-        // =======================
-        //  BUTTONS
-        // =======================
-        book = new JButton("Book");
-        book.setBounds(180, 350, 140, 40);
-        book.addActionListener(this);
-        f.add(book);
-
-        back = new JButton("Back");
-        back.setBounds(400, 350, 140, 40);
-        back.addActionListener(this);
-        f.add(back);
-
-
-
-        // Load departments from DB
         populateDepartments();
+        populateDates();
+        populateTimeSlots();
 
         f.setVisible(true);
     }
 
+    private JLabel label(String text, int x, int y) {
+        return label(text, x, y, 14, false);
+    }
 
+    private JLabel label(String text, int x, int y, int size, boolean bold) {
+        JLabel l = new JLabel(text);
+        l.setBounds(x, y, 400, 30);
+        l.setFont(new Font("Arial", bold ? Font.BOLD : Font.PLAIN, size));
+        return l;
+    }
 
-    // =====================================================
-    //  LOAD UNIQUE DEPARTMENTS FROM DOCTOR TABLE
-    // =====================================================
+    private JComboBox<String> box(int x, int y) {
+        JComboBox<String> b = new JComboBox<>();
+        b.setBounds(x, y, 300, 30);
+        f.add(b);
+        return b;
+    }
+
+    private JButton button(String text, int x, int y) {
+        JButton b = new JButton(text);
+        b.setBounds(x, y, 140, 40);
+        b.addActionListener(this);
+        f.add(b);
+        return b;
+    }
+
     private void populateDepartments() {
         try {
             ConnectionClass obj = new ConnectionClass();
-
-            String query = "SELECT DISTINCT doctorDepartment FROM hospital_management_system.doctor";
-            ResultSet rs = obj.stm.executeQuery(query);
-
-            while (rs.next()) {
-                deptBox.addItem(rs.getString("doctorDepartment"));
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            ResultSet rs = obj.stm.executeQuery(
+                    "SELECT DISTINCT doctorDepartment FROM hospital_management_system.doctor"
+            );
+            while (rs.next()) deptBox.addItem(rs.getString(1));
+        } catch (Exception ignored) {}
     }
 
-
-
-    // =====================================================
-    //  LOAD DOCTORS BASED ON SELECTED DEPARTMENT
-    // =====================================================
     private void loadDoctors() {
-
         doctorBox.removeAllItems();
-
         try {
             ConnectionClass obj = new ConnectionClass();
-
-            String selectedDept = (String) deptBox.getSelectedItem();
-
-            if (selectedDept != null) {
-
-                String query =
-                        "SELECT doctorName FROM hospital_management_system.doctor " +
-                                "WHERE doctorDepartment='" + selectedDept + "'";
-
-                ResultSet rs = obj.stm.executeQuery(query);
-
-                while (rs.next()) {
-                    doctorBox.addItem(rs.getString("doctorName"));
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            PreparedStatement ps = obj.con.prepareStatement(
+                    "SELECT doctorName FROM hospital_management_system.doctor WHERE doctorDepartment=?"
+            );
+            ps.setString(1, (String) deptBox.getSelectedItem());
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) doctorBox.addItem(rs.getString(1));
+        } catch (Exception ignored) {}
     }
 
+    private void populateDates() {
+        java.time.LocalDate d = java.time.LocalDate.now();
+        for (int i = 0; i < 7; i++) dateBox.addItem(d.plusDays(i).toString());
+    }
 
-
-    // =====================================================
-    //  GENERATE DOCTOR TIME SLOTS (9AM–5PM, SKIPPING LUNCH)
-    // =====================================================
     private void populateTimeSlots() {
-
-        ArrayList<String> slots = new ArrayList<>();
-
         for (int h = 9; h < 17; h++) {
-
-            if (h == 12 || h == 13) continue; // Skip 12–2 PM lunch break
-
-            slots.add(String.format("%02d:00", h));
-            slots.add(String.format("%02d:40", h));
-        }
-
-        for (String s : slots) {
-            timeBox.addItem(s);
+            if (h == 12 || h == 13) continue;
+            timeBox.addItem(String.format("%02d:00", h));
+            timeBox.addItem(String.format("%02d:40", h));
         }
     }
 
-
-
-    // =====================================================
-    //  BUTTON HANDLER
-    // =====================================================
     @Override
     public void actionPerformed(ActionEvent ae) {
 
-        // --------------------
-        //  BOOK APPOINTMENT
-        // --------------------
+        if (ae.getSource() == back) {
+            f.dispose();
+            new ProfilePatient(patientEmail);
+            return;
+        }
+
         if (ae.getSource() == book) {
-
-            String dept = (String) deptBox.getSelectedItem();
-            String doctor = (String) doctorBox.getSelectedItem();
-            String date = (String) dateBox.getSelectedItem();
-            String time = (String) timeBox.getSelectedItem();
-
-            // Basic validation
-            if (dept == null || doctor == null || date == null || time == null) {
-                JOptionPane.showMessageDialog(f, "Please select all fields!");
-                return;
-            }
 
             try {
                 ConnectionClass obj = new ConnectionClass();
 
+                PreparedStatement psPatient =
+                        obj.con.prepareStatement("SELECT patientId FROM patient WHERE emailId=?");
+                psPatient.setString(1, patientEmail);
+                ResultSet rp = psPatient.executeQuery();
+                if (!rp.next()) return;
+                int patientId = rp.getInt(1);
 
-                // --------------------
-                //  Get doctorId
-                // --------------------
-                String qDoctor =
-                        "SELECT doctorId FROM hospital_management_system.doctor " +
-                                "WHERE doctorName='" + doctor + "'";
+                PreparedStatement psDoctor =
+                        obj.con.prepareStatement("SELECT doctorId FROM doctor WHERE doctorName=?");
+                psDoctor.setString(1, (String) doctorBox.getSelectedItem());
+                ResultSet rd = psDoctor.executeQuery();
+                if (!rd.next()) return;
+                int doctorId = rd.getInt(1);
 
-                ResultSet rsDoctor = obj.stm.executeQuery(qDoctor);
+                PreparedStatement ins = obj.con.prepareStatement(
+                        "INSERT INTO appointment VALUES (NULL,?,?,?,?,?,?,?, 'Pending')"
+                );
+                ins.setInt(1, doctorId);
+                ins.setString(2, (String) doctorBox.getSelectedItem());
+                ins.setInt(3, patientId);
+                ins.setString(4, patientName);
+                ins.setString(5, (String) deptBox.getSelectedItem());
+                ins.setString(6, (String) dateBox.getSelectedItem());
+                ins.setString(7, (String) timeBox.getSelectedItem());
 
-                int doctorId = 0;
-                if (rsDoctor.next()) doctorId = rsDoctor.getInt("doctorId");
-
-
-
-                // --------------------
-                //  Get patientId
-                // --------------------
-                String qPatient =
-                        "SELECT patientId FROM hospital_management_system.patient " +
-                                "WHERE patientName='" + patientName + "'";
-
-                ResultSet rsPatient = obj.stm.executeQuery(qPatient);
-
-                int patientId = 0;
-                if (rsPatient.next()) patientId = rsPatient.getInt("patientId");
-
-
-
-                // --------------------
-                //  Insert appointment
-                // --------------------
-                String insert =
-                        "INSERT INTO hospital_management_system.appointment " +
-                                "(doctorId, doctorName, patientId, patientName, doctorDepartment, docAppointmentDate, docAppointmentTime, docAppointmentStatus) " +
-                                "VALUES (" + doctorId + ", '" + doctor + "', " + patientId + ", '" + patientName + "', '" + dept + "', '" + date + "', '" + time + "', 'Pending')";
-
-                int result = obj.stm.executeUpdate(insert);
-
-                if (result > 0)
-                    JOptionPane.showMessageDialog(f, "Appointment booked successfully!");
-                else
-                    JOptionPane.showMessageDialog(f, "Failed to book appointment.");
+                ins.executeUpdate();
+                JOptionPane.showMessageDialog(f, "Appointment booked!");
 
             } catch (Exception e) {
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(f, "Database error occurred!");
             }
         }
-
-
-
-        // --------------------
-        //  BACK BUTTON
-        // --------------------
-        if (ae.getSource() == back) {
-            f.setVisible(false);
-            new ProfilePatient(patientName);
-        }
     }
-
-
-
     public static void main(String[] args) {
-        new AppointmentBooking("TestPatient");
+
+        // ⚠ Must exist in DB
+        String testEmail = "testpatient@gmail.com";
+        String testName  = "Test Patient";
+
+        SwingUtilities.invokeLater(() ->
+                new AppointmentBooking(testEmail, testName)
+        );
     }
+
 }
