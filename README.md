@@ -44,17 +44,28 @@ Hospitals handle thousands of records daily—patients, doctors, schedules. Manu
 ---
 
 ## Class Information
-  1. AdminLogin.java => admin login page
-  2. Appointment.java => appointment page for doctors
-  3. AppointmentBooking.java=> page to book appointments
-  4. ConnectionClass.java=> database connection file
-  5. DoctorLogin.java => Doctor Login page
-  6. Index.java  => main class
-  7. PatientLogin.java => Patient Login page
-  8. ProfileAdmin.java => Admin profile page
-  9. ProfileDoctor.java => Doctor profile page
-  10. ProfilePatient.java=> Patient profile page
-  11. RegistrationPage.java=> to register new user
+ 1.	AddPatient.java => Page to add a new patient with personal and medical details
+2.	AdminLogin.java => Admin login page to access admin dashboard
+3.    Appointment.java => Page for doctors to view and manage appointments
+4.    AppointmentBooking.java=> Interface to book new appointments and check for conflicts
+5.    Billing.java => Handles billing and payments for patient visits
+6.    ConnectionClass.java=> Database connection class using JDBC
+7.    DoctorLogin.java => Doctor login page to access doctor dashboard
+8.    Index.java => Main entry point of the project
+9.    MainPage.java => Landing page for the system with navigation
+10.	PatientLogin.java => Patient login page to access patient profile and appointments
+11.	PharmacistLogin.java => Pharmacist login page for managing prescriptions and medicines
+12.	ProfileAdmin.java => Admin profile page to manage users and hospital data
+13.	ProfileDoctor.java => Doctor profile page to view appointments and patient info
+14.	ProfilePatient.java=> Patient profile page to view appointments, prescriptions, and personal info
+15.	ProfilePharmacist.java => Pharmacist profile page to manage medicines and prescriptions
+16.	ProfileReceptionist.java => Receptionist profile page to manage appointments and registrations
+17.	ReceptionistDashboard.java => Dashboard for receptionists to monitor appointments and patients
+18.	ReceptionistLogin.java => Receptionist login page
+19.	RegistrationPage.java=> Registration page for new users (patients, doctors, admin)
+20.	SearchPatient.java => Page to search and retrieve patient records
+21.	ViewAppointments.java => Page to view all appointments for patients, doctors, or staff
+
 
 ---
       
