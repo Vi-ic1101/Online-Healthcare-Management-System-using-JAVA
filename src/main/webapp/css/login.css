@@ -1,0 +1,130 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Background */
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    height: 100vh;
+    background: linear-gradient(
+                    rgba(0, 0, 0, 0.55),
+                    rgba(0, 0, 0, 0.55)
+                ),
+                url("../images/main_image.jpg") no-repeat center center;
+    background-size: cover;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Main container (acts like JFrame) */
+.container {
+    position: relative;
+    width: 800px;
+    height: 570px;
+    border-radius: 16px;
+    padding: 20px;
+    color: #ffffff;
+}
+
+/* Headings */
+.title1 {
+    position: absolute;
+    top: 200px;
+    left: 50px;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.title2 {
+    position: absolute;
+    top: 250px;
+    left: 70px;
+    font-size: 24px;
+    opacity: 0.95;
+}
+
+.title3 {
+    position: absolute;
+    top: 40px;
+    left: 20px;
+    font-size: 26px;
+    font-weight: 600;
+    color: #ffd27d;
+}
+
+/* Buttons – common style */
+button {
+    position: absolute;
+    width: 160px;
+    height: 42px;
+
+    background: rgba(30, 30, 30, 0.85);
+    color: #ffb347;
+
+    border: 1px solid rgba(255, 179, 71, 0.5);
+    border-radius: 8px;
+
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+/* Hover effect */
+button:hover {
+    background: #ffb347;
+    color: #1a1a1a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Role buttons positioning */
+button[value="Doctor"] {
+    top: 330px;
+    left: 50px;
+}
+
+button[value="Patient"] {
+    top: 330px;
+    left: 250px;
+}
+
+button[value="Admin"] {
+    top: 390px;
+    left: 50px;
+}
+
+button[value="Pharmacist"] {
+    top: 390px;
+    left: 250px;
+}
+
+button[value="Receptionist"] {
+    top: 450px;
+    left: 150px;
+}
+
+/* Back button */
+.back {
+    top: 20px;
+    left: 650px;
+    width: 110px;
+    height: 36px;
+    font-size: 14px;
+
+    background: rgba(255, 255, 255, 0.85);
+    color: #333;
+    border: none;
+}
+
+.back:hover {
+    background: #ffffff;
+    color: #000;
+}

@@ -1,0 +1,71 @@
+/* Reset default margins and font */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Full page background */
+.index-page {
+    min-height: 100vh;
+    background-image: url("../images/main_image.jpg"); /* Path to your image */
+    background-size: cover;       /* Cover full page */
+    background-position: center;  /* Center the image */
+    background-repeat: no-repeat;
+
+    display: flex;                /* Flexbox to center content */
+    justify-content: center;      /* Horizontal center */
+    align-items: center;          /* Vertical center */
+}
+
+/* Content box with transparency */
+.content-box {
+    background: rgba(255, 255, 255, 0.85); /* Semi-transparent white */
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); /* Soft shadow */
+}
+
+/* Titles inside content box */
+.content-box h1 {
+    margin-bottom: 10px;
+    font-size: 32px;
+    color: #0a5ed7;
+}
+
+.content-box h2 {
+    margin-bottom: 25px;
+    font-size: 20px;
+    color: #333;
+}
+
+/* Button styles */
+button {
+    display: inline-block;
+    margin: 10px;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #0a5ed7;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background-color: #084bb5;   /* Darker blue on hover */
+    transform: translateY(-2px);  /* Slight lift */
+}
+
+button:active {
+    background-color: #063d99;   /* Even darker when pressed */
+    transform: translateY(0);
+}
+
+button:focus {
+    outline: 2px solid #084bb5;  /* Focus ring for accessibility */
+    outline-offset: 2px;
+}

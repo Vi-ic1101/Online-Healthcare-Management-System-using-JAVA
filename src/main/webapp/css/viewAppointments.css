@@ -1,0 +1,46 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+}
+.container {
+    width: 95%;
+    margin: 20px auto;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 12px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+th {
+    background-color: #0b79d0;
+    color: #fff;
+}
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+button {
+    padding: 8px 15px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+button.approve {
+    background-color: #009933;
+    color: #fff;
+}
+button.cancel {
+    background-color: #cc0000;
+    color: #fff;
+}
+button.refresh {
+    background-color: #0b79d0;
+    color: #fff;
+}
+button:hover {
+    opacity: 0.9;
+}

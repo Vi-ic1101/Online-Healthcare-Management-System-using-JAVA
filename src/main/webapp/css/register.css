@@ -1,0 +1,123 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Page background */
+body {
+    min-height: 100vh;
+    background: linear-gradient(to right, #0a5ed7, #4facfe);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Main register box */
+.register-container {
+    background: #ffffff;
+    width: 420px;
+    padding: 30px 35px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+/* Heading */
+.register-container h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #0a5ed7;
+}
+
+/* Form groups */
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* Labels */
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #333;
+}
+
+/* Inputs & select */
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 14px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #0a5ed7;
+}
+
+/* Department field (Doctor only) */
+#dept {
+    display: none;
+}
+
+/* Submit button */
+.btn-register {
+    width: 100%;
+    padding: 12px;
+    background: #0a5ed7;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-register:hover {
+    background: #084bb5;
+}
+
+/* Error message */
+.error-msg {
+    background: #ffe6e6;
+    color: #cc0000;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* Success message */
+.success-msg {
+    background: #e6ffea;
+    color: #1e7e34;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* Login link */
+.login-link {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.login-link a {
+    text-decoration: none;
+    color: #0a5ed7;
+    font-weight: bold;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
